@@ -1,52 +1,77 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { View, Text, TextInput, SafeAreaView, TouchableOpacity } from "react-native";
 import { SelectList } from 'react-native-dropdown-select-list';
 import DatePicker from '@react-native-community/datetimepicker';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import ValidarDropDown from "../functions/validations/Valid-DropDown";
 import ValidarAgendamento from '../functions/validations/Valid-Agendamento';
 import styles from '../styles/novoAgendamento';
+import api from "../services/api";
 
 export default NovoAgendamento = () =>{
+
+    var token = null
+
+    useEffect(() => {
+        const buscar = async () => {
+            token = await AsyncStorage.getItem('tokenId');
+
+            await api.get('medicos', {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then(({data}) => {
+                setBuscaMedico(data);  
+            })
+        } 
+        buscar();
+        
+    },[])
 
     const { control, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(ValidarAgendamento)
     });
 
-    function validaAgendamento(data){
-        console.log(data)
-    }
-
-    // pesquisar como mostrar a data no formato PT-BR
     const [selectDia, setSelectDia] = useState("");
 
     const [selectMedico, setSelectMedico] = useState("");
+    const [buscaMedico, setBuscaMedico] = useState();
 
-    const data = [
-        {key:'1', value:'Médico 1'},
-        {key:'2', value:'Médico 2'},
-        {key:'3', value:'Médico 3'},
-        {key:'4', value:'Médico 4'},
-        {key:'5', value:'Médico 5'},
-        {key:'6', value:'Médico 6'},
-        {key:'7', value:'Médico 7'},
-    ]
+    const medicos = () => {
+        let dados = [];
+
+        if(buscaMedico){
+            buscaMedico.map((val) => {
+                dados.push({key: val.id, value: val.nome})
+            })
+        }
+
+        return dados;
+    };
 
     const [selectHora, setSelectHora] = useState("");
 
-    const hora = [
-        {key:'1', value:'09:00'},
-        {key:'2', value:'10:00'},
-        {key:'3', value:'11:00'},
-        {key:'4', value:'12:00'},
-        {key:'5', value:'14:00'},
-        {key:'6', value:'15:00'},
-        {key:'7', value:'16:00'},
-        {key:'8', value:'17:00'},
-    ]
+    const hora = () => {
+        let horarios= [];
+        var inicio = null;
+        var fim = null;
+        var tempoConsulta = null;
+
+        buscaMedico.map((val) => {
+            if(val.nome === selectMedico){
+                inicio = val.horaInicio;
+                fim = val.horaFim
+                tempoConsulta = val.tempoConsulta
+            }
+        })
+
+        return horarios;
+    };
 
     const [datePicker, setDatePicker] = useState(false);
     const [stringDate, setStringDate] = useState('Escolha a data:');
@@ -62,6 +87,14 @@ export default NovoAgendamento = () =>{
         setStringDate(date.toDateString());
         setDatePicker(false);
     };
+    
+    async function validaAgendamento(data){
+        
+        
+    }
+
+    // pesquisar como mostrar a data no formato PT-BR
+    
 
     return(
         <View style={styles.container}>
@@ -73,11 +106,11 @@ export default NovoAgendamento = () =>{
                 <SelectList 
                     boxStyles={styles.selectList}
                     setSelected={(val) => setSelectMedico(val)} 
-                    data={data} 
+                    data={medicos} 
                     save="value"
                     placeholder="Escolha o Médico: "
                 />
-                {<ValidarDropDown message="Escolha um médico disponivel" value={selectMedico}/>}
+                {<ValidarDropDown message="Escolha um médico disponivel" value={selectMedico}/>}                
 
                 <Controller
                     control={control}

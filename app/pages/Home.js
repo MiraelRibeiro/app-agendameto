@@ -2,6 +2,8 @@ import React, {useEffect} from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import * as Animatable from 'react-native-animatable';
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from "../services/api";
 
 import styles from '../styles/home';
 
@@ -9,12 +11,20 @@ export default Home = () => {
 
     const navigation = useNavigation();
 
-    function autenticarUsuario(){
+    async function autenticarUsuario(){
+        //await AsyncStorage.clear();
         try{
-            const user = null;
+            const token = await AsyncStorage.getItem('tokenId');
             
-            if(user){             
-                if(valor){                
+            if(token){  
+                
+                const data = await api.get('sessions', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                if(data){                
                     navigation.navigate('Principal');
                 }
                 else{                
@@ -27,7 +37,8 @@ export default Home = () => {
             
         }
         catch(error){
-            console.log(error)
+            console.log(error);
+            navigation.navigate('Login');
         }
 
     }

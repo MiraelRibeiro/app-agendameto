@@ -1,19 +1,32 @@
 import React from "react";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Login from "../screens/Login";
-import CadastroAdmin from "../screens/CadastroAdm";
-import Home from "../screens/Home";
+
+import Login from "../pages/Login";
+import CadastroAdmin from "../pages/CadastroAdm";
+import Home from "../pages/Home";
 import AppNavigation from "./AppNavigation";
+import Cadastro from "../pages/Cadastro";
+import Agendamento from "../pages/Agendamento";
+import NovoAgendamento from "../pages/NovoAgendamento";
+import Configuracoes from "../pages/Configuracoes";
 
 const Stack = createNativeStackNavigator();
 
-export default UserNavigation = () =>{
+export default UserNavigation = ({navigation}) =>{
     return (
+        
         <Stack.Navigator screenOptions={{headerShown: false,}}>
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="Cadastro" component={CadastroAdmin} />
+            {/* <Stack.Screen name="CadastroAdm" component={CadastroAdmin} /> */}
             <Stack.Screen name="Principal" component={AppNavigation} />
+            {/* <Stack.Screen name="Cadastro" component={Cadastro} /> */}
+
+            {/* <Stack.Screen name="Agendamentos" component={Agendamento} /> */}
+
+            {/* <Stack.Screen name="Novo Agendamento" component={NovoAgendamento}/> */}
+
+            {/* <Stack.Screen name="Configuracoes" component={Configuracoes}/> */}
         </Stack.Navigator>        
       );
 }

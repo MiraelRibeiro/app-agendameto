@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import styles from '../styles/configuracoes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default Configuracoes = () => {
@@ -13,8 +14,9 @@ export default Configuracoes = () => {
             'Sair',
             'Deseja encerrar a sessão?',
             [
-            { text: 'Sim', onPress: () => { 
+            { text: 'Sim', onPress: async () => { 
                 try{
+                    await AsyncStorage.clear();
                     navigation.navigate('Home');
                 }
                 catch(error){

@@ -28,4 +28,16 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
+
+    Input:{
+        marginHorizontal: 10,
+        marginVertical: 5,
+        paddingStart: 10,
+        paddingEnd: 20,
+        paddingTop:5,
+        height:55, 
+        backgroundColor: 'white',
+        borderRadius: 25,
+        alignItems: 'center'
+    },
 })

@@ -89,5 +89,6 @@ export default StyleSheet.create({
         alignSelf: 'flex-start',
         color: '#ff375b',
         marginBottom: 8
-    }
+    },
+    
 })

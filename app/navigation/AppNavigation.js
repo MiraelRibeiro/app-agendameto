@@ -2,16 +2,17 @@ import React from "react";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialIcons, FontAwesome5, FontAwesome } from '@expo/vector-icons';
 
-import Cadastro from "../screens/Cadastro";
-import Agendamento from "../screens/Agendamento";
-import NovoAgendamento from "../screens/NovoAgendamento";
-import Configuracoes from "../screens/Configuracoes";
+import Cadastro from "../pages/Cadastro";
+import Agendamento from "../pages/Agendamento";
+import NovoAgendamento from "../pages/NovoAgendamento";
+import Configuracoes from "../pages/Configuracoes";
 
 const Tab = createBottomTabNavigator();
 
 export default AppNavigator = ({token, userData}) => {
     
     // criar validação por usuario -> se for medico mostrar telas de Meus Agendamentos e Minhas Informações, se for a "clinica" mostrar as demais informações
+
     return<Tab.Navigator
         screenOptions={{
             headerShown: false,
