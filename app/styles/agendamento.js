@@ -4,7 +4,8 @@ export default StyleSheet.create({
     container:{
         flex: 1,        
         backgroundColor: '#E6E8FA',
-        paddingTop: 20
+        paddingTop: 20,
+        paddingBottom:20
     },
 
     componente:{

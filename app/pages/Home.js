@@ -1,9 +1,9 @@
-import React, {useEffect} from "react";
+import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import * as Animatable from 'react-native-animatable';
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import api from "../services/api";
+import { UserSession } from "../functions/Api";
 
 import styles from '../styles/home';
 
@@ -12,19 +12,14 @@ export default Home = () => {
     const navigation = useNavigation();
 
     async function autenticarUsuario(){
-        //await AsyncStorage.clear();
         try{
             const token = await AsyncStorage.getItem('tokenId');
             
             if(token){  
                 
-                const data = await api.get('sessions', {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
+                const data = await UserSession(token);
 
-                if(data){                
+                if(data.status === 200){                
                     navigation.navigate('Principal');
                 }
                 else{                

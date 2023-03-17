@@ -9,10 +9,11 @@ import Cadastro from "../pages/Cadastro";
 import Agendamento from "../pages/Agendamento";
 import NovoAgendamento from "../pages/NovoAgendamento";
 import Configuracoes from "../pages/Configuracoes";
+import Cadastros from "../pages/Cadastros";
 
 const Stack = createNativeStackNavigator();
 
-export default UserNavigation = ({navigation}) =>{
+export default UserNavigation = () =>{
     return (
         
         <Stack.Navigator screenOptions={{headerShown: false,}}>

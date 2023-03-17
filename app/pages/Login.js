@@ -63,7 +63,7 @@ export default Login = () => {
                         control={control}
                         name='user'
                         render={({ field: {onChange, value } }) => (
-                            <TextInput placeholderTextColor={'white'} style={{marginStart: 10, flex:1}} color={'white'} placeholder="Usuário:" onChangeText={onChange} defaultValue={value} />
+                            <TextInput placeholderTextColor={'white'} style={{marginStart: 10, flex:1}} color={'white'} autoCapitalize='none' placeholder="Usuário:" onChangeText={onChange} defaultValue={value} />
                         )}
                     />
                     {errors.user && <Text style={styles.labelErrors}>{errors.user?.message}</Text>}                   

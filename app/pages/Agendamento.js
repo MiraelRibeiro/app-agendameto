@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
 import { View, Text, ScrollView, SafeAreaView, TextInput } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment/moment";
 import { FontAwesome } from '@expo/vector-icons';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import styles from '../styles/agendamento';
-import api from "../services/api";
+import styles from "../styles/agendamento";
+import { AgendamentosIndex } from "../functions/Api";
 
 export default Agendamento = () =>{
 
@@ -21,38 +21,21 @@ export default Agendamento = () =>{
             token = await AsyncStorage.getItem('tokenId');
             userData = JSON.parse(await AsyncStorage.getItem('userData'));
 
-            if(userData.user.type_user === 'gerente'){
-                api.get('agendamentos', {
-                    headers:{
-                        Authorization: `Bearer ${token}`
-                    }
-                })
-                .then(({data}) => {
-                    setAgendamentos(data);
-                })
-            }
-            else{
-                api.get(`agendamentos/medico/${userData.medico_id}`, {
-                    headers:{
-                        Authorization: `Bearer ${token}`
-                    }
-                })
-                .then(({data}) => {
-                    setAgendamentos(data);
-                })
-            }
+            let data = await AgendamentosIndex(token, userData)
+
+            setAgendamentos(data.setData);            
         }
         getStore();
     }, []);
 
     
     return(
-        <SafeAreaView style={{flex:1, backgroundColor: '#E6E8FA', paddingTop:10}}>
+        <SafeAreaView style={{flex:1, backgroundColor: '#E6E8FA', paddingTop:10 }}>
             <View style={{flexDirection: 'row', position: 'relative', ...styles.Input}} >                
                 <TextInput placeholderTextColor={'black'} style={{marginStart: 10, flex: 1}} color={'black'}  placeholder="Pesquisar:" onChangeText={setPesquisa} />      
                 <FontAwesome name="search" size={30} color="black" />            
             </View>
-            <ScrollView style={styles.container}>         
+            <ScrollView style={{...styles.container }}>         
                 {agendamentos.filter(function(item){
                     if(pesquisa === ""){
                         return item;
@@ -65,7 +48,7 @@ export default Agendamento = () =>{
                         return(
                             <View key={val.id} style={styles.componente}>                            
                                 <View style={styles.circle}>
-                                    <Text style={{color: 'white', fontSize:22, fontWeight:'800'}}>{moment(new Date(val.data)).format('DD/MM/YYYY').substring(0,5)}</Text>
+                                    <Text style={{color: 'white', fontSize:22, fontWeight:'800'}}>{moment(val.data).format('DD/MM/YYYY').substring(0,5)}</Text>
                                 </View>
                                 <View >
                                     <Text style={{fontSize:22, fontWeight:'600', color: '#2f2e2e'}} >{val.pacienteNome}</Text>

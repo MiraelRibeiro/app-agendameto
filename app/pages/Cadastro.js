@@ -1,26 +1,22 @@
 import React, { useState } from "react";
-import { View, TextInput, Text, ScrollView, Pressable } from "react-native";
+import { View, TextInput, Text, ScrollView, DatePickerIOSBase, TouchableOpacity } from "react-native";
 import { SelectList, MultipleSelectList } from 'react-native-dropdown-select-list';
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import styles from '../styles/cadastro';
 import ValidarCadastro from "../functions/validations/Valid-Cadastro";
 import ValidarDropDown from "../functions/validations/Valid-DropDown";
 
-export default Cadastro = ({token}) =>{
+export default Cadastro = () =>{
 
-    const { control, handleSubmit, formState: { errors } } = useForm({
-        resolver: yupResolver(ValidarCadastro)
-    });
+    var token = null;
 
-    function validaCadastro(data){
-        console.log(token)
-    }
 
     const [selectUser, setSelectUser] = useState("");
 
-    const data = [
+    const usuario = [
         {key:'1', value:'Paciente'},
         {key:'2', value:'Médico'},
     ]
@@ -158,17 +154,33 @@ export default Cadastro = ({token}) =>{
         }
     }
 
+    const { control, handleSubmit, formState: { errors } } = useForm({
+        resolver: yupResolver(ValidarCadastro)
+    });
+
+    async function salvarCadastro(dados){
+        try{
+            token = await AsyncStorage.getItem('tokenId');
+            console.log(token);
+            console.log(dados);
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
+
     return(
         <View style={styles.container}>
             <View style={{backgroundColor: '#3333FF'}}>
                 <Text style={styles.label}>Novo Cadastro</Text>
             </View>
-            <ScrollView style={styles.dados}>
+
+            <ScrollView style={styles.dados}>                             
                 <Controller
                     control={control}
-                    name='name'
+                    name='nome'
                     render={({ field: {onChange, value } }) => (                            
-                        <TextInput style={styles.Input} placeholder='Nome Completo:' onChangeText={onChange} defaultValue={value} />
+                        <TextInput style={styles.Input} placeholder='Nome Completo:' onChangeText={onChange} value={value} defaultValue={value} />
                     )}
                 />
                 {errors.name && <Text style={styles.labelErrors}>{errors.name?.message}</Text>}
@@ -178,7 +190,7 @@ export default Cadastro = ({token}) =>{
                     control={control}
                     name='cpf'
                     render={({ field: {onChange, value } }) => (                            
-                        <TextInput style={styles.Input} placeholder='CPF:' onChangeText={onChange} defaultValue={value} />
+                        <TextInput style={styles.Input} placeholder='CPF:' keyboardType="numeric" onChangeText={onChange} defaultValue={value} />
                     )}
                 />
                 {errors.cpf && <Text style={styles.labelErrors}>{errors.cpf?.message}</Text>}
@@ -197,7 +209,7 @@ export default Cadastro = ({token}) =>{
                 <SelectList 
                     boxStyles={styles.selectList}
                     setSelected={(val) => setSelectUser(val)} 
-                    data={data} 
+                    data={usuario} 
                     save="value"
                     placeholder="Tipo de cadastro:"
                 />
@@ -289,10 +301,10 @@ export default Cadastro = ({token}) =>{
 
             </ScrollView>
 
-            <Pressable style={styles.button} onPress={handleSubmit(validaCadastro())}>
+            <TouchableOpacity style={styles.button} onPress={handleSubmit(salvarCadastro)}>
                 <Text style={styles.textButton}>Cadastrar</Text>
-            </Pressable>
+            </TouchableOpacity>
         </View>
-    )
+    );
 }
 
